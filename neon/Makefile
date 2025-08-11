@@ -10,7 +10,7 @@
 
 # CC = gcc
 CC = clang
-CFLAGS = -fomit-frame-pointer -W -Wall -O3 -Wextra -Wpedantic -Wshadow -Wundef -Wno-overlength-strings -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -march=armv8-a
+CFLAGS = -fomit-frame-pointer -W -Wall -O3 -Wextra -Wpedantic -Wshadow -Wundef -Wno-overlength-strings -mcpu=cortex-a53 -march=armv8-a
 # ARM A53 targets
 a53_test: build/a53_test_falcon512 build/a53_test_falcon1024
 a53: build/a53_speed512 build/a53_speed1024 build/a53_bench512 build/a53_bench1024
