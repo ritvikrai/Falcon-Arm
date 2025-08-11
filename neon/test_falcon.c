@@ -5039,13 +5039,15 @@ test_speed(void)
 }
 #endif
 
-int
-main(void)
+int main(void)
 {
 	unsigned old;
 
+#if defined(__ARM_NEON)
+	printf("Running on ARM NEON (A53 compatible)\n");
+#endif
+
 	old = set_fpu_cw(2);
-    // printf("NEON\n");
 
 	test_SHAKE256();
 	test_codec();
@@ -5067,6 +5069,6 @@ main(void)
 	/* test_speed(); */
 
 	set_fpu_cw(old);
-    printf("====\n");
+	printf("====\n");
 	return 0;
 }

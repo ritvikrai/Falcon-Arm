@@ -10,7 +10,42 @@
 
 # CC = gcc
 CC = clang
-CFLAGS = -fomit-frame-pointer -W -Wall -O3 -Wextra -Wpedantic -Wshadow -Wundef -Wno-overlength-strings
+CFLAGS = -fomit-frame-pointer -W -Wall -O3 -Wextra -Wpedantic -Wshadow -Wundef -Wno-overlength-strings -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -march=armv8-a
+# ARM A53 targets
+a53_test: build/a53_test_falcon512 build/a53_test_falcon1024
+a53: build/a53_speed512 build/a53_speed1024 build/a53_bench512 build/a53_bench1024
+a53_59b: build/a53_speed_59b_512 build/a53_speed_59b_1024
+build/a53_test_falcon512: $(OBJ) $(OBJ_TEST_FALCON) $(HEAD)
+	$(CC) $(CFLAGS) -DFALCON_LOGN=9 -DAPPLE_M1=0 -o $@ $(OBJ) $(OBJ_TEST_FALCON)
+	$@
+
+build/a53_test_falcon1024: $(OBJ) $(OBJ_TEST_FALCON) $(HEAD)
+	$(CC) $(CFLAGS) -DFALCON_LOGN=10 -DAPPLE_M1=0 -o $@ $(OBJ) $(OBJ_TEST_FALCON)
+	$@
+
+build/a53_speed512: $(HEAD1) $(HEAD) $(OBJ) $(OBJ_SPEED)
+	$(CC) $(CFLAGS) -DFALCON_LOGN=9 -DAPPLE_M1=0 -o $@ hal.c $(OBJ) $(OBJ_SPEED)
+	$@
+
+build/a53_speed1024: $(HEAD1) $(HEAD) $(OBJ) $(OBJ_SPEED)
+	$(CC) $(CFLAGS) -DFALCON_LOGN=10 -DAPPLE_M1=0 -o $@ hal.c $(OBJ) $(OBJ_SPEED)
+	$@
+
+build/a53_bench512: $(OBJ) $(OBJ_BENCH) $(HEAD)
+	$(CC) $(CFLAGS) -DFALCON_LOGN=9  -DBENCH_CYCLES=1 -DAPPLE_M1=0 -o $@ hal.c $(OBJ) $(OBJ_BENCH)
+	$@
+
+build/a53_bench1024: $(OBJ) $(OBJ_BENCH) $(HEAD)
+	$(CC) $(CFLAGS) -DFALCON_LOGN=10 -DBENCH_CYCLES=1 -DAPPLE_M1=0 -o $@ hal.c $(OBJ) $(OBJ_BENCH)
+	$@
+
+build/a53_speed_59b_512: $(HEAD1) $(HEAD) $(OBJ)
+	$(CC) $(CFLAGS) -DFALCON_LOGN=9  -DAPPLE_M1=0 -o $@ hal.c $(OBJ) speed_59b_512.c
+	$@
+
+build/a53_speed_59b_1024: $(HEAD1) $(HEAD) $(OBJ)
+	$(CC) $(CFLAGS) -DFALCON_LOGN=10 -DAPPLE_M1=0 -o $@ hal.c $(OBJ) speed_59b_1024.c
+	$@
 LD = clang
 LDFLAGS = 
 LIBS =
